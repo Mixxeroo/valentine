@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Message For You</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <title>For Pups, My Love</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300&display=swap" rel="stylesheet">
     <style>
         :root {
-            --pink-bg: #ffeef2;
+            --bg-color: #ffeef2;
             --envelope-color: #f08080;
-            --envelope-dark: #e07070;
             --wax-red: #9d0208;
-            --text-color: #4a4a4a;
+            --yes-green: #2ecc71;
+            --no-red: #e74c3c;
         }
 
         body {
-            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            background-color: var(--bg-color);
             height: 100vh;
             display: flex;
             align-items: center;
@@ -25,12 +25,11 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* The Envelope Container */
+        /* Floating Animation for the whole envelope */
         .envelope-wrapper {
             position: relative;
             width: 350px;
             height: 250px;
-            cursor: pointer;
             animation: float 3s ease-in-out infinite;
         }
 
@@ -39,7 +38,7 @@
             50% { transform: translateY(-15px); }
         }
 
-        /* The Front Pocket */
+        /* Envelope Parts */
         .pocket {
             position: absolute;
             bottom: 0;
@@ -48,10 +47,9 @@
             background: var(--envelope-color);
             border-radius: 0 0 10px 10px;
             z-index: 3;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        /* Top Flap */
         .flap {
             position: absolute;
             top: 0;
@@ -59,13 +57,13 @@
             height: 0;
             border-left: 175px solid transparent;
             border-right: 175px solid transparent;
-            border-top: 135px solid var(--envelope-dark);
+            border-top: 135px solid #e07070;
             transform-origin: top;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 5;
         }
 
-        /* The Wax Seal */
+        /* Wax Seal */
         .wax-seal {
             position: absolute;
             top: 110px;
@@ -78,16 +76,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            transition: 0.5s;
-            animation: pulse 2s infinite;
+            transition: transform 0.3s, opacity 0.5s;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+        .wax-seal:hover { transform: scale(1.1); }
 
         .heart {
             width: 25px;
@@ -99,63 +93,68 @@
         /* The Letter */
         .letter {
             position: absolute;
-            bottom: 5px;
+            bottom: 10px;
             left: 15px;
             width: 320px;
             height: 230px;
-            background: #fffdf5; /* Parchment white */
+            background: #fffdf5;
             border-radius: 5px;
             z-index: 2;
             transition: transform 0.8s ease-in-out;
-            padding: 20px;
+            padding: 25px;
             box-sizing: border-box;
             text-align: center;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
             justify-content: center;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.05);
         }
 
         .letter h2 {
             font-family: 'Dancing Script', cursive;
-            font-size: 28px;
+            font-size: 30px;
             color: #d43f52;
-            margin: 0;
+            margin: 0 0 10px 0;
         }
 
         .question {
             font-size: 18px;
-            margin: 15px 0;
-            font-weight: 600;
+            color: #555;
+            margin-bottom: 20px;
         }
 
-        /* Animation States */
-        .opened .flap { transform: rotateX(180deg); z-index: 1; }
-        .opened .letter { transform: translateY(-170px); z-index: 4; }
-        .opened .wax-seal { opacity: 0; pointer-events: none; }
-
-        /* Buttons */
-        .btn-group {
+        /* Text Choices (Instead of Buttons) */
+        .choices {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            align-items: center;
+            gap: 50px; /* Moves them side-by-side */
             margin-top: 10px;
         }
 
-        #yesBtn, #noBtn {
-            padding: 10px 25px;
-            border-radius: 25px;
-            border: none;
+        .option {
+            font-family: 'Dancing Script', cursive;
+            font-size: 34px;
             font-weight: bold;
             cursor: pointer;
             transition: 0.2s;
-            font-family: 'Poppins', sans-serif;
+            user-select: none;
         }
 
-        #yesBtn { background: #2ecc71; color: white; }
-        #yesBtn:hover { background: #27ae60; transform: scale(1.1); }
+        #yesBtn { color: var(--yes-green); }
+        #yesBtn:hover { transform: scale(1.2); text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
 
-        #noBtn { background: #e74c3c; color: white; position: absolute; }
+        #noBtn { 
+            color: var(--no-red); 
+            position: relative; 
+            z-index: 100;
+        }
+
+        /* Opening Animations */
+        .opened .flap { transform: rotateX(180deg); z-index: 1; }
+        .opened .letter { transform: translateY(-180px); z-index: 4; }
+        .opened .wax-seal { opacity: 0; pointer-events: none; }
+
     </style>
 </head>
 <body>
@@ -167,11 +166,11 @@
         <div class="flap"></div>
         <div class="pocket"></div>
         <div class="letter">
-            <h2>Hi Beautiful,</h2>
+            <h2>Hi Pups, My Love</h2>
             <p class="question">Will you be my Valentine?</p>
-            <div class="btn-group">
-                <button id="yesBtn">YES!</button>
-                <button id="noBtn">No</button>
+            <div class="choices">
+                <span id="yesBtn" class="option">Yes</span>
+                <span id="noBtn" class="option">No</span>
             </div>
         </div>
     </div>
@@ -184,37 +183,41 @@
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
 
-        // Open envelope logic
-        waxSeal.addEventListener('click', (e) => {
-            e.stopPropagation();
+        // 1. Click Wax Seal to Open
+        waxSeal.addEventListener('click', () => {
             envelope.classList.add('opened');
         });
 
-        // Runaway No Button logic
+        // 2. "No" text moves away from mouse
         noBtn.addEventListener('mouseover', () => {
+            // Randomly move No within the screen viewport
             const x = Math.random() * (window.innerWidth - 100);
             const y = Math.random() * (window.innerHeight - 50);
+            
+            noBtn.style.position = 'fixed';
             noBtn.style.left = `${x}px`;
             noBtn.style.top = `${y}px`;
         });
 
-        // Success logic
+        // 3. "Yes" text triggers Petals
         yesBtn.addEventListener('click', () => {
-            const end = Date.now() + (10 * 1000);
+            const end = Date.now() + (15 * 1000); // 15 seconds
 
             (function frame() {
+                // Left side petals
                 confetti({
-                    particleCount: 5,
+                    particleCount: 2,
                     angle: 60,
                     spread: 55,
-                    origin: { x: 0, y: 0.7 },
+                    origin: { x: 0, y: 0.8 },
                     colors: ['#ff69b4', '#ff1493', '#ffffff']
                 });
+                // Right side petals
                 confetti({
-                    particleCount: 5,
+                    particleCount: 2,
                     angle: 120,
                     spread: 55,
-                    origin: { x: 1, y: 0.7 },
+                    origin: { x: 1, y: 0.8 },
                     colors: ['#ff69b4', '#ff1493', '#ffffff']
                 });
 
@@ -223,9 +226,10 @@
                 }
             }());
 
-            document.querySelector('.letter h2').innerHTML = "YAY! ❤️";
-            document.querySelector('.question').innerHTML = "I knew you'd say yes! I love you!";
-            document.querySelector('.btn-group').style.display = 'none';
+            // Final text update
+            document.querySelector('.letter h2').innerHTML = "I Love You! ❤️";
+            document.querySelector('.question').innerHTML = "I knew you'd say yes!";
+            document.querySelector('.choices').style.display = 'none';
         });
     </script>
 </body>
