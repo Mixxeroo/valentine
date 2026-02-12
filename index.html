@@ -25,7 +25,6 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Floating Animation for the whole envelope */
         .envelope-wrapper {
             position: relative;
             width: 350px;
@@ -38,7 +37,6 @@
             50% { transform: translateY(-15px); }
         }
 
-        /* Envelope Parts */
         .pocket {
             position: absolute;
             bottom: 0;
@@ -63,7 +61,6 @@
             z-index: 5;
         }
 
-        /* Wax Seal */
         .wax-seal {
             position: absolute;
             top: 110px;
@@ -81,8 +78,6 @@
             transition: transform 0.3s, opacity 0.5s;
         }
 
-        .wax-seal:hover { transform: scale(1.1); }
-
         .heart {
             width: 25px;
             height: 25px;
@@ -90,7 +85,6 @@
             clip-path: path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z");
         }
 
-        /* The Letter */
         .letter {
             position: absolute;
             bottom: 10px;
@@ -117,18 +111,13 @@
             margin: 0 0 10px 0;
         }
 
-        .question {
-            font-size: 18px;
-            color: #555;
-            margin-bottom: 20px;
-        }
+        .question { font-size: 18px; color: #555; margin-bottom: 20px; }
 
-        /* Text Choices (Instead of Buttons) */
         .choices {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 50px; /* Moves them side-by-side */
+            gap: 60px;
             margin-top: 10px;
         }
 
@@ -142,22 +131,18 @@
         }
 
         #yesBtn { color: var(--yes-green); }
-        #yesBtn:hover { transform: scale(1.2); text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+        #noBtn { color: var(--no-red); position: relative; z-index: 100; }
 
-        #noBtn { 
-            color: var(--no-red); 
-            position: relative; 
-            z-index: 100;
-        }
-
-        /* Opening Animations */
         .opened .flap { transform: rotateX(180deg); z-index: 1; }
         .opened .letter { transform: translateY(-180px); z-index: 4; }
         .opened .wax-seal { opacity: 0; pointer-events: none; }
-
     </style>
 </head>
 <body>
+
+    <audio id="romanticMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
 
     <div class="envelope-wrapper" id="envelope">
         <div class="wax-seal" id="waxSeal">
@@ -182,29 +167,27 @@
         const envelope = document.getElementById('envelope');
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
+        const music = document.getElementById('romanticMusic');
 
-        // 1. Click Wax Seal to Open
+        // Play music and open letter on wax seal click
         waxSeal.addEventListener('click', () => {
             envelope.classList.add('opened');
+            music.play().catch(e => console.log("Music needs interaction first"));
         });
 
-        // 2. "No" text moves away from mouse
+        // "No" text escapism logic
         noBtn.addEventListener('mouseover', () => {
-            // Randomly move No within the screen viewport
             const x = Math.random() * (window.innerWidth - 100);
             const y = Math.random() * (window.innerHeight - 50);
-            
             noBtn.style.position = 'fixed';
             noBtn.style.left = `${x}px`;
             noBtn.style.top = `${y}px`;
         });
 
-        // 3. "Yes" text triggers Petals
+        // "Yes" logic
         yesBtn.addEventListener('click', () => {
-            const end = Date.now() + (15 * 1000); // 15 seconds
-
+            const end = Date.now() + (15 * 1000);
             (function frame() {
-                // Left side petals
                 confetti({
                     particleCount: 2,
                     angle: 60,
@@ -212,7 +195,6 @@
                     origin: { x: 0, y: 0.8 },
                     colors: ['#ff69b4', '#ff1493', '#ffffff']
                 });
-                // Right side petals
                 confetti({
                     particleCount: 2,
                     angle: 120,
@@ -220,13 +202,9 @@
                     origin: { x: 1, y: 0.8 },
                     colors: ['#ff69b4', '#ff1493', '#ffffff']
                 });
-
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
+                if (Date.now() < end) { requestAnimationFrame(frame); }
             }());
 
-            // Final text update
             document.querySelector('.letter h2').innerHTML = "I Love You! ❤️";
             document.querySelector('.question').innerHTML = "I knew you'd say yes!";
             document.querySelector('.choices').style.display = 'none';
